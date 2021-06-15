@@ -18,11 +18,11 @@ class TestOthelloGameplay(unittest.TestCase):
 
         self.assertSetEqual(
             set(game.state.get_legal_actions(othello.Player.DARK)),
-            {othello.Action(othello.Coords.from_str(a))
+            {othello.Action(othello.Coords.from_repr(a))
              for a in ('d3', 'c4', 'f5', 'e6')})
 
         game.play(othello.Player.DARK,
-                  othello.Action(othello.Coords.from_str('d3')))
+                  othello.Action(othello.Coords.from_repr('d3')))
 
         rep = ('........',
                '........',
@@ -36,11 +36,11 @@ class TestOthelloGameplay(unittest.TestCase):
 
         self.assertSetEqual(
             set(game.state.get_legal_actions(othello.Player.LIGHT)),
-            {othello.Action(othello.Coords.from_str(a))
+            {othello.Action(othello.Coords.from_repr(a))
              for a in ('c3', 'e3', 'c5')})
 
         game.play(othello.Player.LIGHT,
-                  othello.Action(othello.Coords.from_str('c5')))
+                  othello.Action(othello.Coords.from_repr('c5')))
 
         rep = ('........',
                '........',

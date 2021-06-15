@@ -53,7 +53,7 @@ class Coords:
         return Coords(rank*8 + file)
 
     @staticmethod
-    def from_str(string: str) -> 'Coords':
+    def from_repr(string: str) -> 'Coords':
         """Create ``Coords`` from string representation."""
         if len(string) != 2:
             raise ValueError('invalid string')
@@ -74,12 +74,20 @@ class Coords:
 
         return Coords.from_file_rank(file, rank)
 
+    @property
+    def repr(self) -> str:
+        return chr(self.file + ord('a')) + str(self.rank+1)
+
 
 @dataclass(frozen=True)
 class Action:
     """Action of an Othello game."""
 
     coords: Coords
+
+    @property
+    def repr(self) -> str:
+        return self.coords.repr
 
 
 @dataclass(frozen=True)
@@ -141,10 +149,10 @@ class Board:
     def initial() -> 'Board':
         """Return the initial board configuration."""
         board = Board(0, 0)
-        board = board.set(Coords.from_str('d4'), Player.LIGHT)
-        board = board.set(Coords.from_str('e4'), Player.DARK)
-        board = board.set(Coords.from_str('d5'), Player.DARK)
-        board = board.set(Coords.from_str('e5'), Player.LIGHT)
+        board = board.set(Coords.from_repr('d4'), Player.LIGHT)
+        board = board.set(Coords.from_repr('e4'), Player.DARK)
+        board = board.set(Coords.from_repr('d5'), Player.DARK)
+        board = board.set(Coords.from_repr('e5'), Player.LIGHT)
 
         return board
 
@@ -253,7 +261,7 @@ class State:
 
     def is_terminal(self) -> bool:
         """Check if the state is terminal."""
-        return any(True for _ in itertools.chain(
+        return all(False for _ in itertools.chain(
             self.get_legal_actions(Player.DARK),
             self.get_legal_actions(Player.LIGHT)))
 
@@ -295,7 +303,7 @@ class Game:
         - A player  if that player wins the game.
         - DRAW      if the game draws.
         """
-        if self.state.is_terminal:
+        if self.state.is_terminal():
             n_darks = f'{self.state.board.dark_board:b}'.count('1')
             n_lights = f'{self.state.board.light_board:b}'.count('1')
 
@@ -311,9 +319,6 @@ class Game:
 
 class Agent:
     """Base class for agents that play Othello."""
-
-    def __init__(self) -> None:
-        raise NotImplementedError('Agent should not be instantiated')
 
     def play(self, state: State) -> Optional[Action]:
         """Play a move.
@@ -339,7 +344,22 @@ class Referee:
 
     def run(self):
         """Run the game."""
-        while self.game.get_conclusion() is not None:
+        while self.game.get_conclusion() is None:
             player = self.game.next_player
             action = self.agents[player].play(self.game.state)
             self.game.play(player, action)
+
+            if action is None:
+                print(f'{player} skips')
+            else:
+                print(f'{player} plays {action.repr}')
+
+            for row in self.game.state.board.repr:
+                print(row)
+
+            print()
+
+        if self.game.get_conclusion() is DRAW:
+            print('Draw!')
+        else:
+            print(f'{self.game.get_conclusion()} wins!')
