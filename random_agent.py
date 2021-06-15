@@ -2,6 +2,7 @@ import random
 from typing import Optional
 
 import othello
+from log_referee import LogReferee
 
 
 class RandomAgent(othello.Agent):
@@ -20,8 +21,8 @@ class RandomAgent(othello.Agent):
 
 
 def run_random_agents() -> None:
-    referee = othello.Referee(RandomAgent(othello.Player.DARK),
-                              RandomAgent(othello.Player.LIGHT))
+    referee = LogReferee(RandomAgent(othello.Player.DARK),
+                         RandomAgent(othello.Player.LIGHT))
     referee.run()
 
 

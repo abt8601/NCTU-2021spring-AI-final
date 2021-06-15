@@ -1,8 +1,10 @@
 import unittest
 
-from random_agent import run_random_agents
+import othello
+from random_agent import RandomAgent
 
 
 class TestRandomAgent(unittest.TestCase):
     def test_random_agent(self):
-        run_random_agents()
+        othello.Referee(RandomAgent(othello.Player.DARK),
+                        RandomAgent(othello.Player.LIGHT)).run()

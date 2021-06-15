@@ -342,6 +342,14 @@ class Referee:
         self.game = Game()
         self.agents = {Player.DARK: dark_agent, Player.LIGHT: light_agent}
 
+    def cb_post_move(self, player: Player, action: Optional[Action]) -> None:
+        """Callback invoked after each move."""
+        pass
+
+    def cb_game_end(self) -> None:
+        """Callback invoked when the game ends."""
+        pass
+
     def run(self):
         """Run the game."""
         while self.game.get_conclusion() is None:
@@ -349,17 +357,6 @@ class Referee:
             action = self.agents[player].play(self.game.state)
             self.game.play(player, action)
 
-            if action is None:
-                print(f'{player} skips')
-            else:
-                print(f'{player} plays {action.repr}')
+            self.cb_post_move(player, action)
 
-            for row in self.game.state.board.repr:
-                print(row)
-
-            print()
-
-        if self.game.get_conclusion() is DRAW:
-            print('Draw!')
-        else:
-            print(f'{self.game.get_conclusion()} wins!')
+        self.cb_game_end()
