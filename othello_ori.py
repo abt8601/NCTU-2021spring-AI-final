@@ -2,8 +2,7 @@ from dataclasses import dataclass, field
 from enum import Enum, auto, unique
 import itertools
 from typing import Final, Iterable, Optional, Union
-# except ImportError:
-#     from typing_extensions import Final, Iterable, Optional, Union
+
 
 @unique
 class Player(Enum):
@@ -20,7 +19,6 @@ class Player(Enum):
 @dataclass(frozen=True)
 class Coords:
     """Coordinates on an Othello board.
-
     Fields:
     - ix: The integer representation of the coordinates. Defined by
           ``rank*8 + file`` where ``rank`` and ``file`` are 0-based numeric
@@ -94,9 +92,7 @@ class Action:
 @dataclass(frozen=True)
 class Board:
     """Board of an Othello game.
-
     Board Representation
-
     This class uses 2 64-bit words to represent a board. The i-th bit (counting
     from LSB) of the ``dark_board`` field (resp. the ``light_board`` field) is
     set iff there is a dark (resp. light) piece on the board at a square whose
@@ -180,7 +176,6 @@ class Board:
     @property
     def repr(self) -> Iterable[str]:
         """String representation of the board.
-
         X represents dark and O represents light.
         """
         def fmt_square(sq: Optional[Player]) -> str:
@@ -234,46 +229,6 @@ class State:
 
         return mask
 
-    def get_score(self, player: Player):
-        if player is Player.DARK:
-            n = f'{self.board.dark_board:b}'.count('1')
-            n_corner = 0
-            for point in ['a1', 'a8', 'h1', 'h8']:
-                if self.board[Coords.from_repr(point)] is Player.DARK:
-                    n_corner += 1
-            n_edge = 0
-            edge_point = []
-            for i in range(2, 8):
-                edge_point.append('a' + str(i))
-                edge_point.append('h' + str(i))
-            for char in range(ord('b'), ord('h')):
-                edge_point.append(chr(char) + '1')
-                edge_point.append(chr(char) + '8')
-            for point in edge_point:
-                if self.board[Coords.from_repr(point)] is Player.DARK:
-                    n_edge += 1
-            score = n + 3 * n_edge + 10 * n_corner
-
-        elif player is Player.LIGHT:
-            n = f'{self.board.light_board:b}'.count('1')
-            n_corner = 0
-            for point in ['a1', 'a8', 'h1', 'h8']:
-                if self.board[Coords.from_repr(point)] is Player.LIGHT:
-                    n_corner += 1
-            n_edge = 0
-            edge_point = []
-            for i in range(2, 8):
-                edge_point.append('a' + str(i))
-                edge_point.append('h' + str(i))
-            for char in range(ord('b'), ord('h')):
-                edge_point.append(chr(char) + '1')
-                edge_point.append(chr(char) + '8')
-            for point in edge_point:
-                if self.board[Coords.from_repr(point)] is Player.LIGHT:
-                    n_edge += 1
-            score = n + 3 * n_edge + 10 * n_corner
-        return score
-
     def is_legal_action(self, player: Player, action: Action) -> bool:
         """Checks if some action is a legal actions for some player."""
         return self.get_flips(player, action) > 0
@@ -283,7 +238,7 @@ class State:
         return (action for action in (Action(Coords(i)) for i in range(64))
                 if self.is_legal_action(player, action))
 
-    def perform_action(self, player: Player, action: Action):
+    def perform_action(self, player: Player, action: Action) -> 'State':
         """Perform an action on behalf of some player."""
         if not self.is_legal_action(player, action):
             raise ValueError('illegal action')
@@ -336,26 +291,16 @@ class Game:
 
         self.next_player = self.next_player.adversary
 
-    def get_score(self, player: Player):
-        """Get the score of the player
-        Return: score
-        """
-        if player is Player.DARK:
-            return f'{self.state.board.dark_board:b}'.count('1')
-        elif player is Player.LIGHT:
-            return f'{self.state.board.light_board:b}'.count('1')
-
     def get_conclusion(self) -> Optional[Union[Player, _DrawType]]:
         """Get the conclusion of the game.
-
         Returns:
         - None      if the game is still progressing.
         - A player  if that player wins the game.
         - DRAW      if the game draws.
         """
         if self.state.is_terminal():
-            n_darks = self.get_score(Player.DARK)
-            n_lights = self.get_score(Player.LIGHT)
+            n_darks = f'{self.state.board.dark_board:b}'.count('1')
+            n_lights = f'{self.state.board.light_board:b}'.count('1')
 
             if n_darks > n_lights:
                 return Player.DARK
@@ -372,14 +317,11 @@ class Agent:
 
     def play(self, state: State) -> Optional[Action]:
         """Play a move.
-
         Arguments:
         - state: Current game state.
-
         Returns:
         - An action  if the agent intends to play such action.
         - None       if the agent intends to skip.
-
         Note that the agent can skip iff there is no legal action.
         """
         raise NotImplementedError('method not overridden')
