@@ -5,7 +5,7 @@ import othello
 from log_referee import LogReferee
 
 
-class MinimaxAgent(othello.Agent):
+class ExpectimaxAgent(othello.Agent):
     def __init__(self, play_as: othello.Player) -> None:
         super().__init__()
 
@@ -19,7 +19,7 @@ class MinimaxAgent(othello.Agent):
         else:
             self.depth = 2
 
-            def minimax(currentGameState, depth, player):
+            def expectimax(currentGameState, depth, player):
                 if currentGameState.is_terminal():
                     return currentGameState.get_score(self.play_as)
                 legal_actions = list(currentGameState.get_legal_actions(player))
@@ -28,26 +28,28 @@ class MinimaxAgent(othello.Agent):
                 scores = []
                 if player != self.play_as:
                     if depth == self.depth:
+                        scores = 0.0
                         for action in legal_actions:
                             childGameState = currentGameState.perform_action(player, action)
-                            scores.append(currentGameState.get_score(self.play_as))
-                        return min(scores)
+                            scores += currentGameState.get_score(self.play_as)
+                        return scores / len(legal_actions)
                     else:
+                        scores = 0.0
                         for action in legal_actions:
                             childGameState = currentGameState.perform_action(player, action)
-                            scores.append(minimax(childGameState, depth + 1, player.adversary))
-                        return min(scores)
+                            scores += expectimax(childGameState, depth + 1, player.adversary)
+                        return scores / len(legal_actions)
                 else:
                     for action in legal_actions:
                         childGameState = currentGameState.perform_action(player, action)
-                        scores.append(minimax(childGameState, depth, player.adversary))
+                        scores.append(expectimax(childGameState, depth, player.adversary))
                     return max(scores)    
 
             scores = []
             # Choose one of the best actions
             for action in legal_actions:
                 childgameState = state.perform_action(self.play_as, action)
-                scores.append(minimax(childgameState, 1, self.play_as.adversary))
+                scores.append(expectimax(childgameState, 1, self.play_as.adversary))
             bestScore = max(scores)
             bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
             # Pick randomly among the best
@@ -56,12 +58,12 @@ class MinimaxAgent(othello.Agent):
             return legal_actions[chosenIndex]
 
 
-def run_minimax_agents() -> None:
-    referee = LogReferee(MinimaxAgent(othello.Player.DARK),
-                         MinimaxAgent(othello.Player.LIGHT))
+def run_expectimax_agents() -> None:
+    referee = LogReferee(ExpectimaxAgent(othello.Player.DARK),
+                         ExpectimaxAgent(othello.Player.LIGHT))
     referee.run()
 
 
 if __name__ == '__main__':
-    run_minimax_agents()
+    run_expectimax_agents()
 

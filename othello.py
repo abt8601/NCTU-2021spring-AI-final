@@ -234,44 +234,42 @@ class State:
 
         return mask
 
-    def get_score(self, player: Player):
+    def heuristic_eval_number(self, player: Player):
         if player is Player.DARK:
-            n = f'{self.board.dark_board:b}'.count('1')
-            n_corner = 0
-            for point in ['a1', 'a8', 'h1', 'h8']:
-                if self.board[Coords.from_repr(point)] is Player.DARK:
-                    n_corner += 1
-            n_edge = 0
-            edge_point = []
-            for i in range(2, 8):
-                edge_point.append('a' + str(i))
-                edge_point.append('h' + str(i))
-            for char in range(ord('b'), ord('h')):
-                edge_point.append(chr(char) + '1')
-                edge_point.append(chr(char) + '8')
-            for point in edge_point:
-                if self.board[Coords.from_repr(point)] is Player.DARK:
-                    n_edge += 1
-            score = n + 3 * n_edge + 10 * n_corner
-
+            return f'{self.board.dark_board:b}'.count('1')
         elif player is Player.LIGHT:
-            n = f'{self.board.light_board:b}'.count('1')
-            n_corner = 0
-            for point in ['a1', 'a8', 'h1', 'h8']:
-                if self.board[Coords.from_repr(point)] is Player.LIGHT:
-                    n_corner += 1
-            n_edge = 0
-            edge_point = []
-            for i in range(2, 8):
-                edge_point.append('a' + str(i))
-                edge_point.append('h' + str(i))
-            for char in range(ord('b'), ord('h')):
-                edge_point.append(chr(char) + '1')
-                edge_point.append(chr(char) + '8')
-            for point in edge_point:
-                if self.board[Coords.from_repr(point)] is Player.LIGHT:
-                    n_edge += 1
-            score = n + 3 * n_edge + 10 * n_corner
+            return f'{self.board.light_board:b}'.count('1')
+
+    def heuristic_eval_edge(self, player: Player):
+        n_edge = 0
+        edge_point = []
+        for i in range(2, 8):
+            edge_point.append('a' + str(i))
+            edge_point.append('h' + str(i))
+        for char in range(ord('b'), ord('h')):
+            edge_point.append(chr(char) + '1')
+            edge_point.append(chr(char) + '8')
+        for point in edge_point:
+            if self.board[Coords.from_repr(point)] is player:
+                n_edge += 1
+        return n_edge
+
+    def heuristic_eval_corner(self, player: Player):
+        n_corner = 0
+        for point in ['a1', 'a8', 'h1', 'h8']:
+            if self.board[Coords.from_repr(point)] is player:
+                n_corner += 1
+        return n_corner
+
+    def heuristic_eval_n_action(self, player: Player):
+        return len(list(self.get_legal_actions(player)))
+
+    def get_score(self, player: Player):
+        score_number = self.heuristic_eval_number(player)
+        score_edge = self.heuristic_eval_edge(player)
+        score_corner = self.heuristic_eval_corner(player)
+        score_n_action = self.heuristic_eval_n_action(player)
+        score = score_number + 3 * score_edge + 10 * score_corner + score_n_action
         return score
 
     def is_legal_action(self, player: Player, action: Action) -> bool:
