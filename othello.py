@@ -2,8 +2,7 @@ from dataclasses import dataclass, field
 from enum import Enum, auto, unique
 import itertools
 from typing import Final, Iterable, Optional, Union
-# except ImportError:
-#     from typing_extensions import Final, Iterable, Optional, Union
+
 
 @unique
 class Player(Enum):
@@ -195,6 +194,13 @@ class Board:
                         for file in range(8)) for rank in range(8))
 
 
+class _DrawType:
+    pass
+
+
+DRAW: Final[_DrawType] = _DrawType()
+
+
 @dataclass(frozen=True)
 class State:
     """State of an Othello game."""
@@ -299,18 +305,34 @@ class State:
 
         return State(Board(dark_board, light_board))
 
-    def is_terminal(self) -> bool:
-        """Check if the state is terminal."""
-        return all(False for _ in itertools.chain(
+    def get_conclusion(self) -> Optional[Union[Player, _DrawType]]:
+        """Get the conclusion of the game.
+
+        Returns:
+        - None      if the game is still progressing.
+        - A player  if that player wins the game.
+        - DRAW      if the game draws.
+        """
+        no_legal_actions = all(False for _ in itertools.chain(
             self.get_legal_actions(Player.DARK),
             self.get_legal_actions(Player.LIGHT)))
 
+        if no_legal_actions:
+            n_darks = self.get_score(Player.DARK)
+            n_lights = self.get_score(Player.LIGHT)
 
-class _DrawType:
-    pass
+            if n_darks > n_lights:
+                return Player.DARK
+            elif n_darks < n_lights:
+                return Player.LIGHT
+            else:
+                return DRAW
+        else:
+            return None
 
-
-DRAW: Final[_DrawType] = _DrawType()
+    def is_terminal(self) -> bool:
+        """Check if the state is terminal."""
+        return self.get_conclusion() is not None
 
 
 @dataclass
@@ -352,18 +374,7 @@ class Game:
         - A player  if that player wins the game.
         - DRAW      if the game draws.
         """
-        if self.state.is_terminal():
-            n_darks = self.get_score(Player.DARK)
-            n_lights = self.get_score(Player.LIGHT)
-
-            if n_darks > n_lights:
-                return Player.DARK
-            elif n_darks < n_lights:
-                return Player.LIGHT
-            else:
-                return DRAW
-        else:
-            return None
+        return self.state.get_conclusion()
 
 
 class Agent:
