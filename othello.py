@@ -264,7 +264,8 @@ class State:
     def heuristic_eval_n_action(self, player: Player):
         return len(list(self.get_legal_actions(player)))
 
-    def get_score(self, player: Player):
+
+    def get_score(self,player: Player):
         score_number = self.heuristic_eval_number(player)
         score_edge = self.heuristic_eval_edge(player)
         score_corner = self.heuristic_eval_corner(player)
