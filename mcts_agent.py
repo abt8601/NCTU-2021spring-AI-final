@@ -119,7 +119,7 @@ class MCTSAgent(othello.Agent):
 
 
 def run_mcts_agents() -> None:
-    n_iters = 10
+    n_iters = 100
 
     referee = LogReferee(MCTSAgent(othello.Player.DARK, n_iters),
                          MCTSAgent(othello.Player.LIGHT, n_iters))
