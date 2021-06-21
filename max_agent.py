@@ -3,17 +3,17 @@ from typing import Optional
 
 import othello
 from log_referee import LogReferee
-
+import evaluation
 
 class MaxAgent(othello.Agent):
-    def __init__(self, play_as: othello.Player) -> None:
+    def __init__(self, play_as: othello.Player, eval_func=evaluation.heuristic_eval_comprehensive) -> None:
         super().__init__()
 
         self.play_as = play_as
+        self.evaluation_function = lambda state: eval_func(state, self.play_as)
 
     def play(self, state: othello.State) -> Optional[othello.Action]:
         legal_actions = list(state.get_legal_actions(self.play_as))
-
         if legal_actions == []:
             return None
         else:
@@ -26,7 +26,7 @@ class MaxAgent(othello.Agent):
             option = []
             for action in legal_actions:
                 next_state = state.perform_action(self.play_as, action)
-                score = next_state.get_score(self.play_as)
+                score = self.evaluation_function(next_state)
                 option.append((action, score))
             best_action = max(option ,key=lambda item:item[1])[0]
             return best_action

@@ -240,13 +240,13 @@ class State:
 
         return mask
 
-    def heuristic_eval_number(self, player: Player):
+    def n_number(self, player: Player):
         if player is Player.DARK:
             return f'{self.board.dark_board:b}'.count('1')
         elif player is Player.LIGHT:
             return f'{self.board.light_board:b}'.count('1')
 
-    def heuristic_eval_edge(self, player: Player):
+    def n_edge(self, player: Player):
         n_edge = 0
         edge_point = []
         for i in range(2, 8):
@@ -260,23 +260,26 @@ class State:
                 n_edge += 1
         return n_edge
 
-    def heuristic_eval_corner(self, player: Player):
+    def n_corner(self, player: Player):
         n_corner = 0
         for point in ['a1', 'a8', 'h1', 'h8']:
             if self.board[Coords.from_repr(point)] is player:
                 n_corner += 1
         return n_corner
 
-    def heuristic_eval_n_action(self, player: Player):
+    def n_action(self, player: Player):
         return len(list(self.get_legal_actions(player)))
 
+    def adversary_n_action(self, player: Player):
+        return -len(list(self.get_legal_actions(player.adversary)))
 
     def get_score(self,player: Player):
-        score_number = self.heuristic_eval_number(player)
-        score_edge = self.heuristic_eval_edge(player)
-        score_corner = self.heuristic_eval_corner(player)
-        score_n_action = self.heuristic_eval_n_action(player)
-        score = score_number + 3 * score_edge + 10 * score_corner + score_n_action
+        score_number = self.n_number(player)
+        score_edge = self.n_edge(player)
+        score_corner = self.n_corner(player)
+        score_n_action = self.n_action(player)
+        score_adversary_n_action = self.adversary_n_action(player)
+        score = 2 * score_number + 5 * score_edge + 10 * score_corner + score_n_action + score_adversary_n_action
         return score
 
     def is_legal_action(self, player: Player, action: Action) -> bool:
@@ -401,6 +404,7 @@ class Referee:
     def __init__(self, dark_agent: Agent, light_agent: Agent):
         self.game = Game()
         self.agents = {Player.DARK: dark_agent, Player.LIGHT: light_agent}
+        self.n_step = 0
 
     def cb_post_move(self, player: Player, action: Optional[Action]) -> None:
         """Callback invoked after each move."""
@@ -415,6 +419,7 @@ class Referee:
         while self.game.get_conclusion() is None:
             player = self.game.next_player
             action = self.agents[player].play(self.game.state)
+            self.n_step += 1
             self.game.play(player, action)
 
             self.cb_post_move(player, action)

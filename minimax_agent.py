@@ -3,34 +3,33 @@ from typing import Optional
 
 import othello
 from log_referee import LogReferee
-
+import evaluation
 
 class MinimaxAgent(othello.Agent):
-    def __init__(self, play_as: othello.Player) -> None:
+    def __init__(self, play_as: othello.Player, search_depth: int =2, eval_func=evaluation.heuristic_eval_comprehensive) -> None:
         super().__init__()
 
         self.play_as = play_as
+        self.depth = search_depth
+        self.evaluation_function = lambda s: eval_func(s, self.play_as)
 
     def play(self, state: othello.State) -> Optional[othello.Action]:
         legal_actions = list(state.get_legal_actions(self.play_as))
-
         if legal_actions == []:
             return None
         else:
-            self.depth = 2
-
             def minimax(currentGameState, depth, player):
                 if currentGameState.is_terminal():
-                    return currentGameState.get_score(self.play_as)
+                    return self.evaluation_function(currentGameState)
                 legal_actions = list(currentGameState.get_legal_actions(player))
                 if len(legal_actions) == 0:
-                    return currentGameState.get_score(self.play_as)
+                    return self.evaluation_function(currentGameState)
                 scores = []
                 if player != self.play_as:
                     if depth == self.depth:
                         for action in legal_actions:
                             childGameState = currentGameState.perform_action(player, action)
-                            scores.append(currentGameState.get_score(self.play_as))
+                            scores.append(self.evaluation_function(currentGameState))
                         return min(scores)
                     else:
                         for action in legal_actions:

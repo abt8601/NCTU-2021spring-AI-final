@@ -6,15 +6,14 @@ import evaluation
 
 
 class AlphaBetaAgent(othello.Agent):
-    def __init__(self, play_as: othello.Player, search_depth: int =5, eval_func=evaluation.simpleEval) -> None:
+    def __init__(self, play_as: othello.Player, search_depth: int =5, eval_func=evaluation.heuristic_eval_comprehensive) -> None:
         super().__init__()
 
         self.play_as = play_as
         self.depth = search_depth
-        self.evaluation_function = lambda s: eval_func(s,self.play_as)
+        self.evaluation_function = lambda s: eval_func(s, self.play_as)
     def play(self, state: othello.State) -> Optional[othello.Action]:
         
-
         def minmax(gameState: othello.State, agent: othello.Player, depth: int, alpha: float, beta: float) -> float:
             if depth == 0 or gameState.is_terminal() is not None:
                 return self.evaluation_function(gameState)
