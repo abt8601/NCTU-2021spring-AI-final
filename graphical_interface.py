@@ -177,7 +177,6 @@ class GUI:
             act = self.AI.play(self.game.state)
             if act is not None:
                 x,y = act.coords.file, act.coords.rank
-                print(x,y)
                 self.animate_and_perform_action((x,y))
                 self.highlight_next_moves()
                 self.update_score_board()
@@ -284,8 +283,8 @@ class GUI:
             msg = 'BLACK Wins!'
         if winner is othello.DRAW:
             msg = 'DRAW!'
-        self.screen.create_rectangle(200,535,300,565,outline="#111",fill='#111')
-        self.screen.create_text(250,550,anchor="c",font=("Consolas",15), text="The game is done!",fill="#008000",outline="#008000")
+        self.screen.create_rectangle(150,535,350,565,outline="#111",fill='#111')
+        self.screen.create_text(250,550,anchor="c",font=("Consolas",20), text=msg,fill="#008000")
         self.screen.update()
     def update_score_board(self):
         self.screen.delete('score')
