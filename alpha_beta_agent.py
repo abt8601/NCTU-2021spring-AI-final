@@ -11,7 +11,7 @@ class AlphaBetaAgent(othello.Agent):
 
         self.play_as = play_as
         self.depth = search_depth
-        self.evaluation_function = lambda s: eval_func(s, self.play_as)
+        self.evaluation_function = lambda state: eval_func(state, self.play_as)
     def play(self, state: othello.State) -> Optional[othello.Action]:
         
         def minmax(gameState: othello.State, agent: othello.Player, depth: int, alpha: float, beta: float) -> float:

@@ -6,12 +6,12 @@ from log_referee import LogReferee
 import evaluation
 
 class ExpectimaxAgent(othello.Agent):
-    def __init__(self, play_as: othello.Player, search_depth: int =5, eval_func=evaluation.heuristic_eval_comprehensive) -> None:
+    def __init__(self, play_as: othello.Player, search_depth: int =2, eval_func=evaluation.heuristic_eval_comprehensive) -> None:
         super().__init__()
 
         self.play_as = play_as
         self.depth = search_depth
-        self.evaluation_function = lambda s: eval_func(s, self.play_as)
+        self.evaluation_function = lambda state: eval_func(state, self.play_as)
 
     def play(self, state: othello.State) -> Optional[othello.Action]:
         legal_actions = list(state.get_legal_actions(self.play_as))

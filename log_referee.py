@@ -1,7 +1,7 @@
 from typing import Optional
 
 import othello
-
+import time
 
 class LogReferee(othello.Referee):
     def cb_post_move(self, player: othello.Player,
@@ -21,3 +21,4 @@ class LogReferee(othello.Referee):
             print('Draw!')
         else:
             print(f'{self.game.get_conclusion()} wins!')
+        print(f'It takes {self.n_step} steps and {time.time() - self.start_time} seconds.')

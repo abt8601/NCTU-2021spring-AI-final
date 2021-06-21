@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from enum import Enum, auto, unique
 import itertools
 from typing import Final, Iterable, Optional, Union
-
+import time
 
 @unique
 class Player(Enum):
@@ -405,7 +405,8 @@ class Referee:
         self.game = Game()
         self.agents = {Player.DARK: dark_agent, Player.LIGHT: light_agent}
         self.n_step = 0
-
+        self.start_time = time.time()
+        
     def cb_post_move(self, player: Player, action: Optional[Action]) -> None:
         """Callback invoked after each move."""
         pass

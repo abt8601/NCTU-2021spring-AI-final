@@ -32,7 +32,7 @@ class MCTSTreeData:
 
 
 class MCTSAgent(othello.Agent):
-    def __init__(self, play_as: othello.Player, n_iters: int,
+    def __init__(self, play_as: othello.Player, n_iters: int =100,
                  c: float = sqrt(2)) -> None:
         super().__init__()
 
