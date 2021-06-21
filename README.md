@@ -5,6 +5,14 @@ Final project of the course Introduction to Artificial Intelligence of NCTU
 
 - Python 3.9 or newer
 
+## Player vs AI
+
+```bash
+python3 graphical_interface.py
+```
+![Screenshot 2021-06-21 23:57:05](https://user-images.githubusercontent.com/32272431/122792136-71e6d480-d2ec-11eb-953d-35ea803c2868.png)
+
+
 ## Python API Brief Description
 
 This section serves as a quick overview of the Python API.
