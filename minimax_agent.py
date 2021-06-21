@@ -11,7 +11,7 @@ class MinimaxAgent(othello.Agent):
 
         self.play_as = play_as
         self.depth = search_depth
-        self.evaluation_function = lambda s: eval_func(s, self.play_as)
+        self.evaluation_function = lambda state: eval_func(state, self.play_as)
 
     def play(self, state: othello.State) -> Optional[othello.Action]:
         legal_actions = list(state.get_legal_actions(self.play_as))
