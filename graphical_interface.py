@@ -4,6 +4,30 @@
 # This code was originally created by John Fish
 
 # Now used by Nemo ( BO-YU, Cheng) on 2021/7/21
+
+# This code is based on works licensed under the following terms.
+#
+#     The MIT License (MIT)
+#
+#     Copyright (c) 2015 John Fish
+#
+#     Permission is hereby granted, free of charge, to any person obtaining a copy
+#     of this software and associated documentation files (the "Software"), to deal
+#     in the Software without restriction, including without limitation the rights
+#     to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#     copies of the Software, and to permit persons to whom the Software is
+#     furnished to do so, subject to the following conditions:
+#
+#     The above copyright notice and this permission notice shall be included in all
+#     copies or substantial portions of the Software.
+#
+#     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#     IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#     SOFTWARE.
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 
@@ -25,13 +49,13 @@ class GUI:
         self.screen.bind("<Button-1>", self.clickHandle)
         self.screen.bind("<Key>",self.keyHandle)
         self.screen.focus_set()
-        
+
 
     def startMenu(self):
         #show menu
         self.showMenu()
         self.isInMenu = True
-        
+
     def showMenu(self):
         self.screen.delete(ALL)
         #Title and shadow
@@ -54,10 +78,10 @@ class GUI:
         #Restart button
         #Background/shadow
         self.screen.create_rectangle(0,5,50,55,fill="#000033", outline="#000033")
-        self.screen.create_rectangle(0,0,50,50,fill="#000088", outline="#000088")     
+        self.screen.create_rectangle(0,0,50,50,fill="#000088", outline="#000088")
         #Arrow
         self.screen.create_arc(5,5,45,45,fill="#000088", width="2",style="arc",outline="white",extent=300)
-        self.screen.create_polygon(33,38,36,45,40,39,fill="white",outline="white")        
+        self.screen.create_polygon(33,38,36,45,40,39,fill="white",outline="white")
         #Quit button
         #Background/shadow
         self.screen.create_rectangle(450,5,500,55,fill="#330000", outline="#330000")
@@ -71,9 +95,9 @@ class GUI:
             self.screen.create_rectangle(50,50,450,450,outline="#000")
         #Drawing the intermediate lines
         for i in range(7):
-            lineShift = 50+50*(i+1)         
+            lineShift = 50+50*(i+1)
             #Horizontal line
-            self.screen.create_line(50,lineShift,450,lineShift,fill="#000")           
+            self.screen.create_line(50,lineShift,450,lineShift,fill="#000")
             #Vertical line
             self.screen.create_line(lineShift,50,lineShift,450,fill="#000")
 
@@ -92,13 +116,13 @@ class GUI:
                     #Delete the highlights
                     x = int((event.x-50)/50)
                     y = int((event.y-50)/50)
-                    #Determine the grid index for where the mouse was clicke        
+                    #Determine the grid index for where the mouse was clicke
                     #If the click is inside the bounds and the move is valid, move to that location
                     if 0<=x<=7 and 0<=y<=7:
                         #print(x,y)
                         moves = self.game.state.get_legal_actions(self.game.next_player)
                         moves = [(m.coords.file, m.coords.rank) for m in moves]
-                        if (x,y) in moves: 
+                        if (x,y) in moves:
                             #print('valid move!')
                             self.respond_player((x,y))
         # In menu
@@ -125,7 +149,7 @@ class GUI:
             self.startGame()
         elif symbol.lower()=="q":
             self.root.destroy()
-    
+
     def startGame(self):
         self.screen.delete(ALL)
         self.showButtons()
@@ -138,13 +162,13 @@ class GUI:
         self.screen.delete(ALL)
         self.isInMenu = True
         self.showMenu()
-        
+
 
     def mainloop(self):
         #Run forever
         self.root.wm_title("Othello")
         self.root.mainloop()
-    
+
     def showGame(self):
         self.screen.delete("highlight")
         self.screen.delete("tile")
@@ -155,7 +179,7 @@ class GUI:
                 if self.game.state.board[c] == othello.Player.LIGHT:
                     self.screen.create_oval(54+50*x,54+50*y,96+50*x,96+50*y,tags="tile {0}-{1}".format(x,y),fill="#aaa",outline="#aaa")
                     self.screen.create_oval(54+50*x,52+50*y,96+50*x,94+50*y,tags="tile {0}-{1}".format(x,y),fill="#fff",outline="#fff")
-                elif self.game.state.board[c] == othello.Player.DARK: 
+                elif self.game.state.board[c] == othello.Player.DARK:
                     self.screen.create_oval(54+50*x,52+50*y,96+50*x,94+50*y,tags="tile {0}-{1}".format(x,y),fill="#111",outline="#111")
                     self.screen.create_oval(54+50*x,54+50*y,96+50*x,96+50*y,tags="tile {0}-{1}".format(x,y),fill="#000",outline="#000")
                 else:
@@ -207,11 +231,11 @@ class GUI:
             self.screen.create_oval(54+50*x,52+50*y,96+50*x,94+50*y,tags="tile {0}-{1}".format(x,y),fill="#111",outline="#111")
         self.screen.update()
         flip_mask = self.game.state.get_flips(self.game.next_player,action)
-        
+
         for x in range(8):
             for y in range(8):
-                if 0x1<<othello.Coords.from_file_rank(x,y).ix & flip_mask != 0: 
-                    if self.game.next_player == othello.Player.LIGHT: 
+                if 0x1<<othello.Coords.from_file_rank(x,y).ix & flip_mask != 0:
+                    if self.game.next_player == othello.Player.LIGHT:
                         self.screen.delete("{0}-{1}".format(x,y))
                         #42 is width of tile so 21 is half of that
                         #Shrinking
@@ -256,7 +280,7 @@ class GUI:
                         self.screen.create_oval(54+50*x,54+50*y,96+50*x,96+50*y,tags="tile {0}-{1}".format(x,y),fill="#000",outline="#000")
                         self.screen.create_oval(54+50*x,52+50*y,96+50*x,94+50*y,tags="tile {0}-{1}".format(x,y),fill="#111",outline="#111")
                         self.screen.update()
-        # update game state after animation             
+        # update game state after animation
         self.game.play(self.game.next_player,action)
 
     def highlight_next_moves(self):
@@ -270,10 +294,10 @@ class GUI:
         for x,y in moves:
             self.screen.create_oval(68+50*x,68+50*y,32+50*(x+1),32+50*(y+1),tags="highlight",fill=highlight_color,outline=highlight_color)
         self.screen.update()
-        
+
     def check_game_end(self):
         winner = self.game.get_conclusion()
-        if winner is None: 
+        if winner is None:
             return
         msg = ''
         if winner is othello.Player.LIGHT:
