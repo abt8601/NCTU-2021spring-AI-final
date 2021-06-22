@@ -51,12 +51,15 @@ class TestMCTSAgent(unittest.TestCase):
 		referee.run()
 	
 class TestAgent(unittest.TestCase):
-	def __init__(self, agent1_id=0, agent2_id=0, eval_func=evaluation.heuristic_eval_comprehensive) -> None:
+	def __init__(self, agent1_id=0, agent2_id=0, search_depth_1: int =2, search_depth_2: int =2, 
+				 eval_func=evaluation.heuristic_eval_comprehensive) -> None:
 		super().__init__()
 
 		self.agent1_id = agent1_id
 		self.agent2_id = agent2_id
 		self.eval_func = eval_func
+		self.search_depth_1 = search_depth_1
+		self.search_depth_2 = search_depth_2
 
 	def test_agent(self):
 		agents_1 = [RandomAgent(othello.Player.DARK), 
@@ -68,7 +71,7 @@ class TestAgent(unittest.TestCase):
 		agents_2 = [RandomAgent(othello.Player.LIGHT), 
 					MaxAgent(othello.Player.LIGHT, self.eval_func), 
 					MinimaxAgent(othello.Player.LIGHT, eval_func=self.eval_func),
-					AlphaBetaAgent(othello.Player.LIGHT,search_depth=3, eval_func=self.eval_func), 
+					AlphaBetaAgent(othello.Player.LIGHT, eval_func=self.eval_func), 
 					ExpectimaxAgent(othello.Player.LIGHT, eval_func=self.eval_func), 
 					MCTSAgent(othello.Player.LIGHT)]
 		referee = LogReferee(agents_1[self.agent1_id],
