@@ -1,4 +1,3 @@
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # Modified from https://github.com/johnafish/othello
 
@@ -108,13 +107,13 @@ class GUI:
             if 300<=yMouse<=350:
                 #One star
                 if 25<=xMouse<=155:
-                    self.AI = AlphaBetaAgent(othello.Player.DARK, search_depth=10)
+                    self.AI = AlphaBetaAgent(othello.Player.DARK, search_depth=2)
                 #Two star
                 elif 180<=xMouse<=310:
                     self.AI = MCTSAgent(othello.Player.DARK, n_iters=100)
                 #Three star
                 elif 335<=xMouse<=465:
-                    self.AI = MCTSAgent(othello.Player.DARK, n_iters=500)
+                    self.AI = MCTSAgent(othello.Player.DARK, n_iters=200)
                 self.isInMenu = False
                 print('game start!')
                 self.startGame()
@@ -298,7 +297,7 @@ class GUI:
             b_color = 'green'
         self.screen.create_oval(5,540,25,560,tags="score",fill=w_color,outline=w_color)
         self.screen.create_oval(380,540,400,560,tags="score",fill=b_color,outline=b_color)
-		#Pushing text to screen
+        #Pushing text to screen
         self.screen.create_text(30,550,anchor="w", tags="score",font=("Consolas", 50),fill="white",text=w_score)
         self.screen.create_text(400,550,anchor="w", tags="score",font=("Consolas", 50),fill="black",text=b_score)
         self.screen.update()

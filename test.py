@@ -76,4 +76,8 @@ class TestAgent(unittest.TestCase):
 		referee.run()
 
 if __name__ == '__main__':
-	TestAgent().test_agent()
+	for i in range(6):
+		for j in range(6):
+			print('i =', i, '\tj =', j)
+			TestAgent(i, j).test_agent()
+		print()

@@ -6,7 +6,7 @@ import evaluation
 
 
 class AlphaBetaAgent(othello.Agent):
-    def __init__(self, play_as: othello.Player, search_depth: int =5, eval_func=evaluation.heuristic_eval_comprehensive) -> None:
+    def __init__(self, play_as: othello.Player, search_depth: int =4, eval_func=evaluation.heuristic_eval_comprehensive) -> None:
         super().__init__()
 
         self.play_as = play_as
@@ -15,7 +15,7 @@ class AlphaBetaAgent(othello.Agent):
     def play(self, state: othello.State) -> Optional[othello.Action]:
         
         def minmax(gameState: othello.State, agent: othello.Player, depth: int, alpha: float, beta: float) -> float:
-            if depth == 0 or gameState.is_terminal() is not None:
+            if depth == 0 or gameState.is_terminal() :
                 return self.evaluation_function(gameState)
             
             moves = gameState.get_legal_actions(agent)

@@ -1,9 +1,9 @@
 import othello 
 
 def heuristic_eval_number(state:othello.State, player: othello.Player):
-        if player is Player.DARK:
+        if player is othello.Player.DARK:
             return f'{state.board.dark_board:b}'.count('1')
-        elif player is Player.LIGHT:
+        elif player is othello.Player.LIGHT:
             return f'{state.board.light_board:b}'.count('1')
 
 def heuristic_eval_edge(state:othello.State, player: othello.Player):
