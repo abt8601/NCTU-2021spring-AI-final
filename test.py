@@ -76,12 +76,9 @@ class TestAgent(unittest.TestCase):
 		referee.run()
 
 if __name__ == '__main__':
-<<<<<<< HEAD
 	for i in range(6):
 		for j in range(6):
 			print('i =', i, '\tj =', j)
 			TestAgent(i, j).test_agent()
 		print()
-=======
-	TestAgent(agent1_id=4,agent2_id=3).test_agent()
->>>>>>> 10e88f32ebc3c20bebde4a46ea930a2ba9ce482b
+

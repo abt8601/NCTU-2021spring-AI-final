@@ -323,8 +323,8 @@ class State:
             self.get_legal_actions(Player.LIGHT)))
 
         if no_legal_actions:
-            n_darks = self.get_score(Player.DARK)
-            n_lights = self.get_score(Player.LIGHT)
+            n_darks = self.n_number(Player.DARK)
+            n_lights = self.n_number(Player.LIGHT)
 
             if n_darks > n_lights:
                 return Player.DARK
@@ -334,6 +334,11 @@ class State:
                 return DRAW
         else:
             return None
+
+    def get_difference(self):
+        n_darks = self.n_number(Player.DARK)
+        n_lights = self.n_number(Player.LIGHT)
+        return abs(n_darks - n_lights)
 
     def is_terminal(self) -> bool:
         """Check if the state is terminal."""

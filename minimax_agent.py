@@ -6,7 +6,7 @@ from log_referee import LogReferee
 import evaluation
 
 class MinimaxAgent(othello.Agent):
-    def __init__(self, play_as: othello.Player, search_depth: int =2, eval_func=evaluation.heuristic_eval_comprehensive) -> None:
+    def __init__(self, play_as: othello.Player, search_depth: int =3, eval_func=evaluation.heuristic_eval_comprehensive) -> None:
         super().__init__()
 
         self.play_as = play_as

@@ -21,4 +21,5 @@ class LogReferee(othello.Referee):
             print('Draw!')
         else:
             print(f'{self.game.get_conclusion()} wins!')
+            print(f'It wins {self.game.state.get_difference()} chess pieces.')
         print(f'It takes {self.n_step} steps and {time.time() - self.start_time} seconds.')
