@@ -421,6 +421,7 @@ class Referee:
             player = self.game.next_player
             action = self.agents[player].play(self.game.state)
             self.n_step += 1
+           
             self.game.play(player, action)
 
             self.cb_post_move(player, action)

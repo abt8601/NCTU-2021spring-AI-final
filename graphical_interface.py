@@ -108,13 +108,13 @@ class GUI:
             if 300<=yMouse<=350:
                 #One star
                 if 25<=xMouse<=155:
-                    self.AI = AlphaBetaAgent(othello.Player.DARK, search_depth=10)
+                    self.AI = AlphaBetaAgent(othello.Player.DARK, search_depth=2)
                 #Two star
                 elif 180<=xMouse<=310:
                     self.AI = MCTSAgent(othello.Player.DARK, n_iters=100)
                 #Three star
                 elif 335<=xMouse<=465:
-                    self.AI = MCTSAgent(othello.Player.DARK, n_iters=500)
+                    self.AI = MCTSAgent(othello.Player.DARK, n_iters=200)
                 self.isInMenu = False
                 print('game start!')
                 self.startGame()
