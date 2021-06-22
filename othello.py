@@ -412,8 +412,9 @@ class Referee:
         self.game = Game()
         self.agents = {Player.DARK: dark_agent, Player.LIGHT: light_agent}
         self.n_step = 0
-        self.start_time = time.time()
-        
+        self.time_dark = 0
+        self.time_light = 0
+
     def cb_post_move(self, player: Player, action: Optional[Action]) -> None:
         """Callback invoked after each move."""
         pass
@@ -425,12 +426,19 @@ class Referee:
     def run(self):
         """Run the game."""
         while self.game.get_conclusion() is None:
+            start_time = time.time()
             player = self.game.next_player
             action = self.agents[player].play(self.game.state)
             self.n_step += 1
            
             self.game.play(player, action)
-
+            end_time = time.time()
+            time_duration = end_time - start_time
+            
+            if player is Player.DARK:
+                self.time_dark += time_duration
+            elif player is Player.LIGHT:
+                self.time_light += time_duration
             self.cb_post_move(player, action)
 
         self.cb_game_end()
