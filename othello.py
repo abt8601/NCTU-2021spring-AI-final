@@ -3,6 +3,7 @@ from enum import Enum, auto, unique
 import itertools
 from typing import Final, Iterable, Optional, Union
 import time
+from functools import cache
 
 @unique
 class Player(Enum):
@@ -212,6 +213,7 @@ class State:
         """Return the initial state."""
         return State(Board.initial())
 
+    @cache
     def get_flips(self, player: Player, action: Action) -> int:
         """Get bitmask of pieces flipped when player performs action."""
         if self.board[action.coords] is not None:
