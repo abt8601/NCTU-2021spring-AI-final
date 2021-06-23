@@ -21,7 +21,7 @@ class AlphaBetaAgent(othello.Agent):
             moves = gameState.get_legal_actions(agent)
             # when there is no action , this node has only 1 child, no search is needed
             if moves is None:
-                return minimax(gameState, agent.adversary, depth-1, alpha, beta)
+                return minmax(gameState, agent.adversary, depth-1, alpha, beta)
             
             v = None
             if agent == self.play_as: # max node
