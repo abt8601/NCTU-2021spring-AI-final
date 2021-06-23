@@ -6,6 +6,7 @@ Final project of the course Introduction to Artificial Intelligence of NCTU
 - Python 3.9 or newer
 
 ## Player vs AI
+GUI code is modified from [johnafish's design](https://github.com/johnafish/othello)
 
 ```bash
 python3 graphical_interface.py
