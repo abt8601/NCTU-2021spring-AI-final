@@ -48,13 +48,13 @@ class AlphaBetaAgent(othello.Agent):
                         break
             return v
 
-        moves = state.get_legal_actions(self.play_as)
+        moves = list(state.get_legal_actions(self.play_as))
 
-        if len([moves]) == 0:
+        if len(moves) == 0:
             return None
 
         max_score = float('-inf')
-        best_move = None
+        best_move = moves[0]
         for m in moves:
             score = minmax(state.perform_action(self.play_as,m), self.play_as.adversary ,  2*self.depth - 1, max_score, float('inf'))
             if score > max_score:
