@@ -6,7 +6,7 @@ from log_referee import LogReferee
 import evaluation
 
 class ExpectimaxAgent(othello.Agent):
-    def __init__(self, play_as: othello.Player, search_depth: int =3, eval_func=evaluation.heuristic_eval_comprehensive) -> None:
+    def __init__(self, play_as: othello.Player, search_depth: int =2, eval_func=evaluation.heuristic_eval_comprehensive) -> None:
         super().__init__()
 
         self.play_as = play_as
@@ -27,18 +27,24 @@ class ExpectimaxAgent(othello.Agent):
                 scores = []
                 if player != self.play_as:
                     if depth == self.depth:
+                        if len(legal_actions) == 0:
+                            return self.evaluation_function(currentGameState)
                         scores = 0.0
                         for action in legal_actions:
                             childGameState = currentGameState.perform_action(player, action)
                             scores += self.evaluation_function(currentGameState)
                         return scores / len(legal_actions)
                     else:
+                        if len(legal_actions) == 0:
+                            return expectimax(currentGameState, depth + 1, player.adversary)
                         scores = 0.0
                         for action in legal_actions:
                             childGameState = currentGameState.perform_action(player, action)
                             scores += expectimax(childGameState, depth + 1, player.adversary)
                         return scores / len(legal_actions)
                 else:
+                    if len(legal_actions) == 0:
+                        return expectimax(currentGameState, depth, player.adversary)
                     for action in legal_actions:
                         childGameState = currentGameState.perform_action(player, action)
                         scores.append(expectimax(childGameState, depth, player.adversary))
@@ -56,13 +62,10 @@ class ExpectimaxAgent(othello.Agent):
             
             return legal_actions[chosenIndex]
 
-
 def run_expectimax_agents() -> None:
     referee = LogReferee(ExpectimaxAgent(othello.Player.DARK),
                          ExpectimaxAgent(othello.Player.LIGHT))
     referee.run()
 
-
 if __name__ == '__main__':
     run_expectimax_agents()
-
