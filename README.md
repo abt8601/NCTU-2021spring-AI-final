@@ -1,5 +1,13 @@
 # NCTU-2021spring-AI-final
-Final project of the course Introduction to Artificial Intelligence of NCTU
+Final project of the course Introduction to Artificial Intelligence of NCTU.
+
+This project implements an Othello game engine and several different AIs. In particular, the following approaches are used.
+- Greedy, which selects the action maximising the heuristic evaluation function
+- Minimax, with or without alpha-beta pruning
+- Expectimax
+- Pure MCTS
+
+There is also a graphical interface where you can play against these AIs with three levels of difficulty.
 
 ## Requirement
 
